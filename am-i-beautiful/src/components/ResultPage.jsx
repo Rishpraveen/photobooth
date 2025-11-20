@@ -197,9 +197,9 @@ export default function ResultPage() {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto min-h-0">
-            <div className="polaroid-container relative bg-white p-2 sm:p-3 pb-4 sm:pb-6 shadow-2xl rotate-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full animate-in zoom-in duration-500 my-auto">
+            <div className="polaroid-container relative bg-white p-2 sm:p-3 pb-4 sm:pb-6 shadow-2xl rotate-1 w-full max-w-[280px] sm:max-w-sm md:max-w-md animate-in zoom-in duration-500 my-auto">
                 {/* Polaroid Image Area */}
-                <div className="aspect-[3/4] bg-black w-full mb-2 overflow-hidden relative group" style={{ maxHeight: '250px' }}>
+                <div className="aspect-[3/4] bg-black w-full mb-2 overflow-hidden relative">
                     {capturedImage && (
                         <img
                             src={capturedImage}
@@ -237,7 +237,7 @@ export default function ResultPage() {
                 {revealState === "revealed" && rarity && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none overflow-hidden">
                         <div
-                            className="border-8 border-current px-6 py-3 text-3xl md:text-5xl font-black tracking-tighter uppercase rotate-[-15deg] opacity-0 animate-stamp-in"
+                            className="border-4 sm:border-6 md:border-8 border-current px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xl sm:text-3xl md:text-5xl font-black tracking-tighter uppercase rotate-[-15deg] opacity-0 animate-stamp-in"
                             style={{
                                 color: rarity.color,
                                 borderColor: rarity.color,
@@ -252,10 +252,10 @@ export default function ResultPage() {
 
                         {/* Simple CSS Confetti for ALL tiers (more for high tiers) */}
                         <div className="absolute inset-0 overflow-hidden">
-                            {[...Array(rarity.id === 'mythic' ? 40 : rarity.id === 'legendary' ? 30 : 20)].map((_, i) => (
+                            {[...Array(rarity.id === 'mythic' ? 30 : rarity.id === 'legendary' ? 20 : 15)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className="absolute w-3 h-3 rounded-full animate-confetti"
+                                    className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full animate-confetti"
                                     style={{
                                         left: `${Math.random() * 100}%`,
                                         top: `-20px`,
@@ -277,14 +277,11 @@ export default function ResultPage() {
                 )}
 
                 {/* Result Text Area (Inside Polaroid) */}
-                <div className="flex-1 w-full flex flex-col items-center justify-center text-center px-3 py-2 bg-white overflow-hidden" style={{
-                    minHeight: '100px',
-                    maxHeight: '140px',
-                    fontSize: displayedText.length > 120 ? '0.75rem' : displayedText.length > 80 ? '0.9rem' : '1.1rem',
-                    lineHeight: '1.2',
-                }}>
+                <div className="flex-1 w-full flex flex-col items-center justify-center text-center px-2 sm:px-3 md:px-4 py-3 sm:py-4 bg-white overflow-hidden min-h-[80px] sm:min-h-[100px] max-h-[140px]">
                     {revealState === "revealed" ? (
-                        <p className="font-typewriter text-vintage-dark leading-relaxed">
+                        <p className="font-typewriter text-vintage-dark leading-snug" style={{
+                            fontSize: displayedText.length > 120 ? '0.65rem' : displayedText.length > 80 ? '0.75rem' : '0.85rem'
+                        }}>
                             {renderHighlightedText(displayedText)}
                             <span className="animate-pulse">|</span>
                         </p>
@@ -300,15 +297,15 @@ export default function ResultPage() {
             {/* Random Facts / Quotes */}
         {revealState === "revealed" && (
             <>
-                <div className="mt-3 sm:mt-4 max-w-md text-center opacity-70 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 px-4">
-                    <p className="text-[9px] sm:text-[10px] md:text-xs font-typewriter italic text-vintage-dark/80">
+                <div className="mt-2 sm:mt-3 md:mt-4 max-w-md text-center opacity-70 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 px-3 sm:px-4">
+                    <p className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs font-typewriter italic text-vintage-dark/80">
                         "Beauty is power; a smile is its sword."
                     </p>
                 </div>
 
                 {/* Motivational Message */}
-                <div className="mt-2 sm:mt-3 max-w-md text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 px-4">
-                    <p className="text-[10px] sm:text-xs md:text-sm font-bold text-vintage-dark bg-vintage-gold/20 px-3 sm:px-4 py-2 rounded-lg border border-vintage-gold">
+                <div className="mt-2 sm:mt-2.5 md:mt-3 max-w-md text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 px-3 sm:px-4">
+                    <p className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm font-bold text-vintage-dark bg-vintage-gold/20 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg border border-vintage-gold">
                         ✨ Now go out there and BE CONFIDENT! ✨
                     </p>
                 </div>
@@ -347,10 +344,10 @@ export default function ResultPage() {
 
         {/* Friends Mode Prompt */}
         {cameraMode === 'friends' && (
-            <div className="mt-4 p-6 bg-vintage-cream border-2 border-vintage-gold rounded-lg text-center max-w-md animate-in slide-in-from-bottom-4 duration-700">
-                <p className="font-display text-2xl mb-3 text-vintage-dark">Looks like only one person is visible.</p>
-                <p className="mb-4 text-base text-vintage-dark/80">Invite a friend for a group vibe or switch to solo mode.</p>
-                <div className="flex justify-center gap-4">
+            <div className="mt-3 sm:mt-4 p-4 sm:p-6 bg-vintage-cream border-2 border-vintage-gold rounded-lg text-center max-w-md mx-auto animate-in slide-in-from-bottom-4 duration-700">
+                <p className="font-display text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-vintage-dark">Looks like only one person is visible.</p>
+                <p className="mb-3 sm:mb-4 text-sm sm:text-base text-vintage-dark/80">Invite a friend for a group vibe or switch to solo mode.</p>
+                <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
                     <button
                         onClick={() => {
                             useAppStore.getState().setCameraMode('solo');
