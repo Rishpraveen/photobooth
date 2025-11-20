@@ -38,20 +38,20 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-      <div className="border-4 border-vintage-dark p-2 mb-12 rotate-1 shadow-xl bg-white max-w-md w-full">
-        <div className="border-2 border-vintage-dark p-8 bg-vintage-cream">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center overflow-y-auto">
+      <div className="border-4 border-vintage-dark p-2 mb-8 md:mb-12 rotate-1 shadow-xl bg-white w-full max-w-sm md:max-w-md">
+        <div className="border-2 border-vintage-dark p-4 sm:p-6 md:p-8 bg-vintage-cream">
           <div className="mb-6 flex justify-center">
             <Sparkles className="w-12 h-12 text-vintage-gold animate-pulse" />
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-display mb-4 text-shadow-vintage tracking-wider">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display mb-3 md:mb-4 text-shadow-vintage tracking-wider">
             AM I<br />BEAUTIFUL?
           </h1>
 
-          <div className="w-full h-px bg-vintage-dark/30 my-6" />
+          <div className="w-full h-px bg-vintage-dark/30 my-4 md:my-6" />
 
-          <p className="text-lg md:text-xl mb-8 leading-relaxed opacity-80">
+          <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-80">
             "A mirror that speaks the truth of your soul."
           </p>
 
@@ -79,14 +79,14 @@ export default function LandingPage() {
 
       {/* API Key Dialog */}
       {showApiKeyDialog && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-vintage-cream border-4 border-vintage-dark p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <Key className="w-6 h-6 text-vintage-gold" />
-              <h2 className="text-2xl font-display text-vintage-dark">Gemini API Key Required</h2>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-vintage-cream border-4 border-vintage-dark p-4 sm:p-6 max-w-md w-full shadow-2xl my-auto">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <Key className="w-5 h-5 sm:w-6 sm:h-6 text-vintage-gold" />
+              <h2 className="text-xl sm:text-2xl font-display text-vintage-dark">Gemini API Key Required</h2>
             </div>
             
-            <p className="text-sm text-vintage-dark/80 mb-4 leading-relaxed">
+            <p className="text-xs sm:text-sm text-vintage-dark/80 mb-3 sm:mb-4 leading-relaxed">
               This app uses Google's Gemini API to generate personalized compliments. 
               Please enter your API key to continue.
             </p>
@@ -145,12 +145,12 @@ export default function LandingPage() {
         </div>
       )}
 
-      <footer className="text-sm opacity-50 font-bold tracking-widest mt-8">
+      <footer className="text-xs sm:text-sm opacity-50 font-bold tracking-widest mt-6 md:mt-8 px-4">
         EST. 2025 • ADVANCED BIOMETRIC ANALYSIS
       </footer>
 
       {/* Fake Disclaimer */}
-      <div className="mt-8 text-[10px] text-vintage-dark/40 text-center max-w-xs mx-auto leading-tight">
+      <div className="mt-4 md:mt-8 text-[9px] sm:text-[10px] text-vintage-dark/40 text-center max-w-xs mx-auto leading-tight px-4">
         * Disclaimer: This application is for research and entertainment purposes only. The biometric analysis is simulated and not a medical or scientific assessment. Results should not be taken as definitive judgments of beauty.
       </div>
     </div>

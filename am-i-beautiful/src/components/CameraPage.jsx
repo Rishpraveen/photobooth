@@ -73,18 +73,24 @@ export default function CameraPage() {
         }, 1000);
     };
 
-    // Determine aspect ratio based on mode - keep container size consistent
-    const aspectRatio = cameraMode === "friends" ? "aspect-video" : "aspect-[3/4]";
+    // Determine aspect ratio based on mode and screen size
+    const getAspectRatio = () => {
+        if (cameraMode === "friends") {
+            return "aspect-video"; // 16:9 for friends mode on all devices
+        }
+        // Solo mode: portrait on mobile, allow widescreen on desktop
+        return "aspect-[3/4] lg:aspect-video";
+    };
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center p-4">
+        <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
             {/* Streak Counter */}
-            <div className="absolute top-4 right-4 z-10 flex items-center gap-1 bg-black/50 px-3 py-1 rounded-full border border-orange-500/50 animate-in fade-in slide-in-from-top-4 duration-700">
-                <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
-                <span className="text-orange-500 font-bold font-mono text-sm">{streak} Day Streak</span>
+            <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 flex items-center gap-1 bg-black/50 px-2 sm:px-3 py-1 rounded-full border border-orange-500/50 animate-in fade-in slide-in-from-top-4 duration-700">
+                <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 fill-orange-500 animate-pulse" />
+                <span className="text-orange-500 font-bold font-mono text-xs sm:text-sm">{streak} Day Streak</span>
             </div>
 
-            <div className={`relative w-full max-w-md ${aspectRatio} bg-vintage-dark p-4 shadow-2xl rotate-1`}>
+            <div className={`relative w-full max-w-sm md:max-w-md lg:max-w-2xl ${getAspectRatio()} bg-vintage-dark p-3 sm:p-4 shadow-2xl rotate-1`}>
                 {/* Viewfinder Frame */}
                 <div className="relative w-full h-full bg-black overflow-hidden border-4 border-vintage-gold/30">
                     <Webcam
@@ -153,32 +159,32 @@ export default function CameraPage() {
             </div>
 
             {/* Anti-Screen Warning */}
-            <div className="mt-4 max-w-md text-center bg-vintage-cream/70 border-2 border-vintage-dark px-4 py-2 rounded-lg">
-                <p className="text-[10px] md:text-xs font-bold text-vintage-dark mb-1">
+            <div className="mt-3 sm:mt-4 max-w-md text-center bg-vintage-cream/70 border-2 border-vintage-dark px-3 sm:px-4 py-2 rounded-lg">
+                <p className="text-[9px] sm:text-[10px] md:text-xs font-bold text-vintage-dark mb-1">
                     ⚠️ REAL FACES ONLY
                 </p>
-                <p className="text-[9px] md:text-[10px] text-vintage-dark/80">
+                <p className="text-[8px] sm:text-[9px] md:text-[10px] text-vintage-dark/80">
                     Please don't show phone screens or photos to the camera. Want to share this with someone? Share the site link instead! 📲
                 </p>
             </div>
 
             {/* Controls */}
-            <div className="mt-6 flex gap-6 items-center">
+            <div className="mt-4 sm:mt-6 flex gap-4 sm:gap-6 items-center">
                 <button
                     onClick={() => setPage("landing")}
-                    className="p-4 rounded-full bg-vintage-cream border-2 border-vintage-dark text-vintage-dark hover:bg-vintage-sepia transition-colors"
+                    className="p-3 sm:p-4 rounded-full bg-vintage-cream border-2 border-vintage-dark text-vintage-dark hover:bg-vintage-sepia transition-colors"
                 >
-                    <RefreshCw className="w-6 h-6" />
+                    <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
 
                 {/* Capture Button */}
                 <button
                     onClick={startCountdown}
                     disabled={!!countdown}
-                    className={`w-16 h-16 rounded-full bg-vintage-dark border-4 ${(faceDetected || cameraMode === "friends") ? 'border-vintage-gold' : 'border-red-500/50'} flex items-center justify-center shadow-lg active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed group`}
+                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-vintage-dark border-4 ${(faceDetected || cameraMode === "friends") ? 'border-vintage-gold' : 'border-red-500/50'} flex items-center justify-center shadow-lg active:scale-95 transition-transform disabled:opacity-50 disabled:cursor-not-allowed group`}
                 >
-                    <div className={`w-12 h-12 rounded-full border-2 border-white/20 bg-gradient-to-br ${(faceDetected || cameraMode === "friends") ? 'from-gray-800 to-black group-hover:from-gray-700' : 'from-red-900/20 to-black'} `}>
-                        <Camera className={`w-6 h-6 mx-auto mt-3 ${(faceDetected || cameraMode === "friends") ? 'text-white' : 'text-white/50'}`} />
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/20 bg-gradient-to-br ${(faceDetected || cameraMode === "friends") ? 'from-gray-800 to-black group-hover:from-gray-700' : 'from-red-900/20 to-black'} flex items-center justify-center`}>
+                        <Camera className={`w-5 h-5 sm:w-6 sm:h-6 ${(faceDetected || cameraMode === "friends") ? 'text-white' : 'text-white/50'}`} />
                     </div>
                 </button>
             </div>

@@ -232,10 +232,10 @@ export default function ResultPage() {
     };
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center p-4 overflow-y-auto min-h-0" style={{ maxHeight: '100%' }}>
-            <div className="relative bg-white p-3 pb-6 shadow-2xl rotate-1 max-w-sm md:max-w-lg w-full animate-in zoom-in duration-500 my-auto">
+        <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto min-h-0">
+            <div className="relative bg-white p-2 sm:p-3 pb-4 sm:pb-6 shadow-2xl rotate-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full animate-in zoom-in duration-500 my-auto">
                 {/* Polaroid Image Area */}
-                <div className="aspect-[3/4] bg-black w-full mb-2 overflow-hidden relative group" style={{ maxHeight: '200px' }}>
+                <div className="aspect-[3/4] bg-black w-full mb-2 overflow-hidden relative group" style={{ maxHeight: '250px' }}>
                     {capturedImage && (
                         <img
                             src={capturedImage}
@@ -336,15 +336,15 @@ export default function ResultPage() {
             {/* Random Facts / Quotes */}
         {revealState === "revealed" && (
             <>
-                <div className="mt-4 max-w-md text-center opacity-70 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                    <p className="text-[10px] md:text-xs font-typewriter italic text-vintage-dark/80">
+                <div className="mt-3 sm:mt-4 max-w-md text-center opacity-70 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 px-4">
+                    <p className="text-[9px] sm:text-[10px] md:text-xs font-typewriter italic text-vintage-dark/80">
                         "Beauty is power; a smile is its sword."
                     </p>
                 </div>
 
                 {/* Motivational Message */}
-                <div className="mt-3 max-w-md text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
-                    <p className="text-xs md:text-sm font-bold text-vintage-dark bg-vintage-gold/20 px-4 py-2 rounded-lg border border-vintage-gold">
+                <div className="mt-2 sm:mt-3 max-w-md text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 px-4">
+                    <p className="text-[10px] sm:text-xs md:text-sm font-bold text-vintage-dark bg-vintage-gold/20 px-3 sm:px-4 py-2 rounded-lg border border-vintage-gold">
                         ✨ Now go out there and BE CONFIDENT! ✨
                     </p>
                 </div>
@@ -352,40 +352,40 @@ export default function ResultPage() {
         )}
 
         {/* Controls */}
-        <div className="mt-6 flex flex-col gap-2 pb-4">
-        <div className="flex gap-2 justify-center">
+        <div className="mt-4 sm:mt-6 flex flex-col gap-2 pb-4 px-2">
+        <div className="flex flex-wrap gap-2 justify-center">
             <button
                 onClick={() => {
                     setIsMuted(!isMuted);
                     if (isMuted && beautyDescription) speak(beautyDescription);
                 }}
-                className="p-3 rounded-full bg-vintage-cream border-2 border-vintage-dark text-vintage-dark hover:bg-vintage-sepia transition-colors"
+                className="p-2 sm:p-3 rounded-full bg-vintage-cream border-2 border-vintage-dark text-vintage-dark hover:bg-vintage-sepia transition-colors"
             >
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
             <button
                 onClick={handleRetake}
-                className="px-6 py-3 bg-vintage-dark text-vintage-cream font-bold tracking-widest border-2 border-vintage-gold hover:bg-gray-900 transition-colors flex items-center gap-2 text-sm md:text-base"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-vintage-dark text-vintage-cream font-bold tracking-widest border-2 border-vintage-gold hover:bg-gray-900 transition-colors flex items-center gap-1 sm:gap-2 text-xs sm:text-sm md:text-base"
             >
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
                 TRY AGAIN
             </button>
 
             <button
                 onClick={handleDownload}
-                className="px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-2 hover:bg-vintage-sepia transition-colors"
+                className="px-3 sm:px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-1 sm:gap-2 hover:bg-vintage-sepia transition-colors text-xs sm:text-sm"
             >
-                <Download className="w-4 h-4" />
-                DOWNLOAD
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">DOWNLOAD</span>
             </button>
 
             <button
                 onClick={handleDownloadResult}
-                className="px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-2 hover:bg-vintage-sepia transition-colors"
+                className="px-3 sm:px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-1 sm:gap-2 hover:bg-vintage-sepia transition-colors text-xs sm:text-sm"
             >
-                <Download className="w-4 h-4" />
-                DOWNLOAD RESULT
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">RESULT</span>
             </button>
         </div>
 
