@@ -1,16 +1,22 @@
 # Am I Beautiful? 📸
 
-A vintage-styled AI-powered beauty analyzer that provides personalized, uplifting compliments based on your photo. This interactive web application combines modern AI technology with a nostalgic photo booth aesthetic.
+A vintage-styled AI-powered photo booth that provides personalized, uplifting compliments based on your photo. This interactive web application combines modern AI technology (Google Gemini 2.0) with a nostalgic photo booth aesthetic.
+
+**Live Demo**: [https://photobooth-gray-nine.vercel.app/](https://photobooth-gray-nine.vercel.app/)
 
 ## ✨ Features
 
-- **AI-Powered Analysis**: Uses Google's Gemini API to generate unique, personalized compliments
-- **Vintage Photo Booth Design**: Retro aesthetic with film grain effects and classic typography
+- **AI-Powered Analysis**: Uses Google's Gemini 2.0 Flash to generate unique, personalized compliments
+- **User-Provided API Keys**: Secure approach where users input their own API keys
+- **Vintage Photo Booth Design**: Retro aesthetic with film grain effects, sepia tones, and classic typography
 - **Dual Camera Modes**: 
   - Solo mode for individual photos
   - Friends mode for group photos
-- **Real-time Processing**: Instant AI-generated responses with visual feedback
-- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Smart Text Highlighting**: Intelligently highlights meaningful descriptive words in compliments
+- **Downloadable Polaroids**: Save your photos with compliments in a vintage polaroid style
+- **Responsive Design**: Mobile-first design with desktop widescreen camera support
+- **Face Mesh Overlay**: Real-time face detection during photo capture
+- **Gamification**: Rarity system with different beauty tier stamps (Common to Mythic)
 
 ## 🎯 Use Case
 
@@ -19,20 +25,21 @@ Perfect for:
 - Creating a fun interactive experience at events or gatherings
 - Demonstrating AI capabilities in a creative, user-friendly way
 - Exploring the intersection of AI and human emotion
+- Social media content creation with downloadable vintage-style results
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Google Gemini API key (get one at [Google AI Studio](https://makersuite.google.com/app/apikey))
+- Google Gemini API key (get one free at [Google AI Studio](https://aistudio.google.com/apikey))
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd am-i-beautiful
+git clone https://github.com/Rishpraveen/photobooth.git
+cd photobooth/am-i-beautiful
 ```
 
 2. Install dependencies:
@@ -40,31 +47,27 @@ cd am-i-beautiful
 npm install
 ```
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
-
-4. Add your Gemini API key to `.env`:
-```env
-VITE_GEMINI_API_KEY=your_api_key_here
-```
-
-5. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-6. Open [http://localhost:5173](http://localhost:5173) in your browser
+4. Open [http://localhost:5173](http://localhost:5173) in your browser
+
+5. **Enter your API key**: When prompted, enter your Google Gemini API key
+   - The key is stored locally in your browser
+   - It persists across page refreshes
+   - Get your free key at [Google AI Studio](https://aistudio.google.com/apikey)
 
 ## 🏗️ Tech Stack
 
-- **Frontend**: React 19, Vite
-- **Styling**: Tailwind CSS 4
-- **State Management**: Zustand
-- **AI**: Google Gemini API
+- **Frontend**: React 19.1.1, Vite 7.2.2
+- **Styling**: Tailwind CSS 4.1.17
+- **State Management**: Zustand 5.0.8 (with persist middleware)
+- **AI**: Google Gemini 2.0 Flash (@google/generative-ai 0.24.1)
+- **Camera**: react-webcam 7.2.0
+- **Face Detection**: MediaPipe tasks-vision 0.10.22
 - **UI Components**: Radix UI, Lucide Icons
-- **Camera**: react-webcam
 
 ## 📦 Build
 
@@ -78,11 +81,44 @@ Preview the production build:
 npm run preview
 ```
 
-## 📝 Environment Variables
+## 🚢 Deploy to Vercel
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_GEMINI_API_KEY` | Google Gemini API key for AI analysis | Yes |
+### Option 1: Deploy with Vercel CLI
+
+1. Install Vercel CLI:
+```bash
+npm i -g vercel
+```
+
+2. Deploy:
+```bash
+vercel
+```
+
+**Note**: No environment variables needed! Users provide their own API keys through the app interface.
+
+### Option 2: Deploy via GitHub
+
+1. Push your code to GitHub
+2. Visit [Vercel](https://vercel.com) and import your repository
+3. Deploy!
+
+No environment variable configuration needed - users will input their own API keys when using the app.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Rishpraveen/photobooth)
+
+## 🔑 API Key Management
+
+This app uses a **user-provided API key** approach for security:
+
+- Users enter their own Google Gemini API key on first use
+- Keys are validated (must start with "AIza")
+- Stored securely in browser localStorage via Zustand persist
+- Persists across page refreshes
+- No server-side API key exposure
+- Each user manages their own quota and billing
+
+**Get your free API key**: [Google AI Studio](https://aistudio.google.com/apikey)
 
 ## 🎨 Project Structure
 
@@ -90,27 +126,66 @@ npm run preview
 am-i-beautiful/
 ├── src/
 │   ├── components/      # React components
-│   │   ├── LandingPage.jsx
-│   │   ├── CameraPage.jsx
-│   │   ├── ResultPage.jsx
-│   │   └── ui/         # Reusable UI components
+│   │   ├── LandingPage.jsx    # Entry with API key dialog
+│   │   ├── CameraPage.jsx     # Camera capture interface
+│   │   ├── ResultPage.jsx     # Results with AI compliments
+│   │   ├── FaceMeshOverlay.jsx # Face detection overlay
+│   │   └── ui/                # Reusable UI components
 │   ├── hooks/          # Custom React hooks
-│   ├── store/          # Zustand state management
-│   ├── utils/          # Utility functions
-│   │   ├── ai.js       # Gemini API integration
-│   │   └── gamification.js
-│   └── App.jsx         # Main application component
+│   ├── store/          
+│   │   └── appStore.js        # Zustand store with API key persistence
+│   ├── utils/          
+│   │   ├── ai.js              # Gemini 2.0 API integration
+│   │   └── gamification.js    # Rarity and sound effects
+│   ├── App.jsx         # Main application component
+│   └── index.css       # Global styles and vintage theme
 ├── public/             # Static assets
+├── vercel.json         # Vercel deployment config
 └── package.json
 ```
 
-## 🛡️ Security Note
+## 🎮 Features in Detail
 
-This application uses client-side API calls to Google Gemini. For production use, consider:
-- Implementing a backend proxy to secure your API key
-- Setting up rate limiting
-- Adding user authentication
-- Implementing proper API key rotation
+### Smart Highlighting
+The app intelligently highlights meaningful words in compliments:
+- High priority: Beauty adjectives (radiant, stunning, elegant)
+- Medium priority: Descriptive words ending in -ful, -ous, -ic, -al
+- Skips common filler words (the, a, and, your, etc.)
+
+### Rarity System
+- Common (60%): Bronze stamp
+- Rare (25%): Silver stamp  
+- Epic (10%): Gold stamp
+- Legendary (4%): Holographic stamp with fanfare
+- Mythic (1%): Rainbow stamp with confetti
+
+### Downloadable Results
+Export your photo with compliment in vintage polaroid format:
+- Sepia-toned image
+- Text wrapped below photo
+- White polaroid border
+- Ready to share on social media
+
+## 🛡️ Security & Privacy
+
+- **No server-side API keys**: Each user provides their own
+- **Client-side only**: No backend server required
+- **Local storage**: API keys stored only in user's browser
+- **No data collection**: Photos processed locally, not stored
+- **HTTPS recommended**: Use secure connections in production
+
+## 🐛 Troubleshooting
+
+**API not working?**
+- Check console logs (F12 → Console) for detailed error messages
+- Verify your API key is valid and active
+- Ensure you haven't exceeded API quota
+- Try using `gemini-1.5-flash-latest` if `gemini-2.0-flash-exp` has issues
+
+**Camera not working?**
+- Grant camera permissions in browser
+- Use HTTPS in production (required for camera access)
+- Check if camera is already in use by another application
 
 ## 📄 License
 
@@ -122,4 +197,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-**Disclaimer**: This application is for entertainment purposes only. The AI-generated compliments are meant to be uplifting and positive, not scientific assessments.
+**⚠️ Disclaimer**: This application is a lighthearted prank designed for entertainment and confidence-boosting purposes only. 
+
+**Important Notes**:
+- **No Vision Analysis**: This app does NOT use any computer vision or ML models to analyze your appearance or facial features
+- **AI-Generated Text Only**: The compliments are generated by Google's Gemini text model based on creative prompts, not actual image analysis
+- **Pure Entertainment**: The "rarity" stamps and "technical metrics" are randomly generated for fun and gamification
+- **Confidence Booster**: The goal is to make everyone feel good about themselves through positive, uplifting messages
+- **Not Scientific**: These are NOT scientific assessments of beauty, attractiveness, or any personal attributes
+
+The face detection overlay is purely decorative and does not influence the AI-generated compliments. Everyone receives genuinely kind, randomly varied compliments designed to brighten their day! 🌟
