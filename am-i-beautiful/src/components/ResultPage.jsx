@@ -1,37 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/appStore";
-import { RefreshCw, Volume2, VolumeX, Users, User, Share2, Download, Sparkles } from "lucide-react";
+import { RefreshCw, Users, User, Share2, Download, Sparkles } from "lucide-react";
 import { calculateRarity, playSound } from "@/utils/gamification";
 
 export default function ResultPage() {
     const { capturedImage, beautyDescription, isGenerating, setPage, reset, cameraMode } = useAppStore();
     const [displayedText, setDisplayedText] = useState("");
-    const [isMuted, setIsMuted] = useState(false);
     const [revealState, setRevealState] = useState("analyzing"); // analyzing -> tension -> revealed
-    const [voices, setVoices] = useState([]);
     const [tensionProgress, setTensionProgress] = useState(0);
-    const [showBeautyPopup, setShowBeautyPopup] = useState(false);
     const [rarity, setRarity] = useState(null);
 
     // Calculate rarity once on mount
     useEffect(() => {
         const r = calculateRarity();
         setRarity(r);
-    }, []);
-
-    // Load voices
-    useEffect(() => {
-        const loadVoices = () => {
-            const availableVoices = window.speechSynthesis.getVoices();
-            setVoices(availableVoices);
-        };
-
-        loadVoices();
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-
-        return () => {
-            window.speechSynthesis.onvoiceschanged = null;
-        };
     }, []);
 
     useEffect(() => {
@@ -59,7 +41,6 @@ export default function ResultPage() {
                     if (progress >= 100) {
                         clearInterval(interval);
                         setRevealState("revealed");
-                        setShowBeautyPopup(true);
                         playSound('stamp');
                         if (rarity && (rarity.id === 'epic' || rarity.id === 'legendary' || rarity.id === 'mythic')) {
                             playSound('fanfare');
@@ -80,32 +61,13 @@ export default function ResultPage() {
                 i++;
                 if (i > beautyDescription.length) {
                     clearInterval(interval);
-                    if (!isMuted) {
-                        speak(beautyDescription);
-                    }
                 }
             }, 50);
             return () => clearInterval(interval);
         }
-    }, [revealState, beautyDescription, isMuted]); // Removed voices dependency to avoid re-triggering
-
-    const speak = (text) => {
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-
-            // Try to find a female voice or a soft voice
-            const preferredVoice = voices.find(v => v.name.includes("Female") || v.name.includes("Samantha") || v.name.includes("Google US English"));
-            if (preferredVoice) utterance.voice = preferredVoice;
-
-            window.speechSynthesis.speak(utterance);
-        }
-    };
+    }, [revealState, beautyDescription]);
 
     const handleRetake = () => {
-        window.speechSynthesis.cancel();
         reset();
         setPage("camera");
     };
@@ -358,16 +320,6 @@ export default function ResultPage() {
         <div className="mt-2 sm:mt-3 flex flex-col gap-2 pb-4 px-2">
         <div className="flex flex-wrap gap-2 justify-center">
             <button
-                onClick={() => {
-                    setIsMuted(!isMuted);
-                    if (isMuted && beautyDescription) speak(beautyDescription);
-                }}
-                className="p-2 sm:p-3 rounded-full bg-vintage-cream border-2 border-vintage-dark text-vintage-dark hover:bg-vintage-sepia transition-colors"
-            >
-                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
-            </button>
-
-            <button
                 onClick={handleRetake}
                 className="px-4 sm:px-6 py-2 sm:py-3 bg-vintage-dark text-vintage-cream font-bold tracking-widest border-2 border-vintage-gold hover:bg-gray-900 transition-colors flex items-center gap-1 sm:gap-2 text-xs sm:text-sm md:text-base"
             >
@@ -453,11 +405,11 @@ function MetricItem({ label, value }) {
 }
 
 function BeautyPopup() {
-    const words = ["DIVINE", "ETHEREAL", "ICONIC", "FLAWLESS", "LEGENDARY", "RADIANT", "MAGNETIC"];
     const [word, setWord] = useState("");
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
+        const words = ["DIVINE", "ETHEREAL", "ICONIC", "FLAWLESS", "LEGENDARY", "RADIANT", "MAGNETIC"];
         setWord(words[Math.floor(Math.random() * words.length)]);
 
         const timer = setTimeout(() => {
@@ -480,19 +432,21 @@ function BeautyPopup() {
 }
 
 function TechnicalReasons() {
-    const reasons = [
-        "Analyzing Golden Ratio Alignment...",
-        "Calculating Skin Luminance Index...",
-        "Measuring Facial Symmetry Vector...",
-        "Evaluating Jawline Geometry...",
-        "Processing Eye Sparkle Density...",
-        "Quantifying Charisma Output...",
-        "Verifying Angelic Features...",
-        "Detecting Main Character Energy..."
-    ];
-    const [currentReason, setCurrentReason] = useState(reasons[0]);
+    const [currentReason, setCurrentReason] = useState("");
 
     useEffect(() => {
+        const reasons = [
+            "Analyzing Golden Ratio Alignment...",
+            "Calculating Skin Luminance Index...",
+            "Measuring Facial Symmetry Vector...",
+            "Evaluating Jawline Geometry...",
+            "Processing Eye Sparkle Density...",
+            "Scanning Aura Wavelength...",
+            "Computing Smile Authenticity Score...",
+            "Quantifying Facial Harmony Units..."
+        ];
+        setCurrentReason(reasons[0]);
+        
         let i = 0;
         const interval = setInterval(() => {
             i = (i + 1) % reasons.length;

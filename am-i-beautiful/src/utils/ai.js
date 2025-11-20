@@ -46,9 +46,14 @@ const FALLBACK_COMPLIMENTS = [
 ];
 
 export async function generateDescription(imageSrc, cameraMode = "solo") {
+    const apiKey = useAppStore.getState().apiKey || import.meta.env.VITE_GEMINI_API_KEY;
+    
+    console.log('🔑 API Key status:', apiKey ? `Present (${apiKey.substring(0, 10)}...)` : 'Missing');
+    
     const model = getModel();
     
     if (!model) {
+        console.warn('⚠️ No model available. Using fallback compliments.');
         // Simulate delay for fallback
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -60,6 +65,7 @@ export async function generateDescription(imageSrc, cameraMode = "solo") {
 
     try {
         console.log('🤖 Using Gemini API to generate description...');
+        console.log('📷 Image data length:', imageSrc.length);
 
         // Convert base64 to GoogleGenerativeAI Part
         const base64Data = imageSrc.split(",")[1];
@@ -138,7 +144,25 @@ Example: "According to the results, you have a genuinely warm smile that lights 
         return text;
     } catch (error) {
         console.error("❌ Gemini API Error:", error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+            response: error.response
+        });
         console.log('⚠️ Falling back to preset compliments');
+        
+        // Check for specific error types
+        if (error.message?.includes('API key')) {
+            console.error('🔑 API Key Error: Please check if your API key is valid');
+        }
+        if (error.message?.includes('quota') || error.message?.includes('limit')) {
+            console.error('📊 Quota Error: API quota may be exceeded');
+        }
+        if (error.message?.includes('CORS') || error.message?.includes('fetch')) {
+            console.error('🌐 Network Error: CORS or connection issue');
+        }
+        
         // Fallback on error
         const randomCompliment = FALLBACK_COMPLIMENTS[Math.floor(Math.random() * FALLBACK_COMPLIMENTS.length)];
         return randomCompliment;
