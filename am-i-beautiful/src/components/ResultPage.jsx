@@ -110,42 +110,6 @@ export default function ResultPage() {
         setPage("camera");
     };
 
-    // Download captured image as PNG – try fetch first, fallback to manual conversion
-    const handleDownload = async () => {
-        if (!capturedImage) return;
-        try {
-            const response = await fetch(capturedImage);
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'photobooth_capture.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        } catch (e) {
-            // Fallback for environments where fetch on data URLs fails
-            console.warn('Fetch download failed, using manual conversion', e);
-            const byteString = atob(capturedImage.split(',')[1]);
-            const mimeString = capturedImage.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            const blob = new Blob([ab], { type: mimeString });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'photobooth_capture.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-    };
-
     // Function to highlight exactly 2 key terms
     const renderHighlightedText = (text) => {
         if (!text) return null;
@@ -352,7 +316,7 @@ export default function ResultPage() {
         )}
 
         {/* Controls */}
-        <div className="mt-4 sm:mt-6 flex flex-col gap-2 pb-4 px-2">
+        <div className="mt-2 sm:mt-3 flex flex-col gap-2 pb-4 px-2">
         <div className="flex flex-wrap gap-2 justify-center">
             <button
                 onClick={() => {
@@ -373,19 +337,11 @@ export default function ResultPage() {
             </button>
 
             <button
-                onClick={handleDownload}
-                className="px-3 sm:px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-1 sm:gap-2 hover:bg-vintage-sepia transition-colors text-xs sm:text-sm"
-            >
-                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">DOWNLOAD</span>
-            </button>
-
-            <button
                 onClick={handleDownloadResult}
                 className="px-3 sm:px-4 py-2 bg-vintage-dark text-vintage-cream rounded-full flex items-center gap-1 sm:gap-2 hover:bg-vintage-sepia transition-colors text-xs sm:text-sm"
             >
                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">RESULT</span>
+                <span className="hidden sm:inline">DOWNLOAD</span>
             </button>
         </div>
 
