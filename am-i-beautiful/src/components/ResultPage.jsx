@@ -197,7 +197,7 @@ export default function ResultPage() {
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto min-h-0">
-            <div className="relative bg-white p-2 sm:p-3 pb-4 sm:pb-6 shadow-2xl rotate-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full animate-in zoom-in duration-500 my-auto">
+            <div className="polaroid-container relative bg-white p-2 sm:p-3 pb-4 sm:pb-6 shadow-2xl rotate-1 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full animate-in zoom-in duration-500 my-auto">
                 {/* Polaroid Image Area */}
                 <div className="aspect-[3/4] bg-black w-full mb-2 overflow-hidden relative group" style={{ maxHeight: '250px' }}>
                     {capturedImage && (
