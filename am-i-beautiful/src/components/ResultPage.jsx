@@ -149,36 +149,78 @@ export default function ResultPage() {
     const handleDownloadResult = async () => {
         if (!capturedImage) return;
         try {
-            // Load captured image
             const img = new Image();
             img.src = capturedImage;
             await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
 
-            // Prepare text lines
-            const text = beautyDescription || displayedText;
-            const lines = text.split('\n');
-            const padding = 20;
-            const lineHeight = 30;
-            const textHeight = lines.length * lineHeight + padding;
+            // Calculate dimensions - polaroid style with large image area
+            const polaroidWidth = 800;
+            const padding = 30; // White border
+            const innerPadding = 15; // Gap between image and text
+            
+            // Image takes most space (3:4 ratio)
+            const imageWidth = polaroidWidth - (padding * 2);
+            const imageHeight = Math.floor(imageWidth * (4/3));
+            
+            // Compact text area
+            const textAreaHeight = 100;
+            const bottomPadding = 40;
+            
+            const totalHeight = padding + imageHeight + innerPadding + textAreaHeight + bottomPadding;
 
-            // Determine canvas size (image + text area)
+            // Create canvas
             const canvas = document.createElement('canvas');
-            canvas.width = img.width + padding * 2;
-            canvas.height = img.height + textHeight + padding * 2;
+            canvas.width = polaroidWidth;
+            canvas.height = totalHeight;
             const ctx = canvas.getContext('2d');
-            // White background
+
+            // White polaroid background
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            // Draw image centered
-            ctx.drawImage(img, padding, padding, img.width, img.height);
-            // Draw text below image
+
+            // Draw image with filters
+            ctx.filter = 'sepia(0.4) contrast(1.1)';
             ctx.fillStyle = '#000000';
-            ctx.font = '20px sans-serif';
-            let y = img.height + padding * 2 + lineHeight / 2;
-            lines.forEach(line => {
-                ctx.fillText(line, padding, y);
-                y += lineHeight;
+            ctx.fillRect(padding, padding, imageWidth, imageHeight);
+            ctx.drawImage(img, padding, padding, imageWidth, imageHeight);
+            ctx.filter = 'none';
+
+            // Draw text
+            const text = beautyDescription || displayedText;
+            ctx.fillStyle = '#2C1810';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            
+            const fontSize = text.length > 120 ? 16 : text.length > 80 ? 18 : 20;
+            ctx.font = `${fontSize}px "Courier Prime", "Courier New", monospace`;
+
+            // Word wrap
+            const maxWidth = imageWidth - 40;
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            words.forEach(word => {
+                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
             });
+            if (currentLine) lines.push(currentLine);
+
+            // Draw text lines
+            const lineHeight = fontSize * 1.4;
+            let startY = padding + imageHeight + innerPadding + 15;
+
+            lines.forEach(line => {
+                ctx.fillText(line, canvas.width / 2, startY);
+                startY += lineHeight;
+            });
+
             // Export as PNG
             canvas.toBlob(blob => {
                 const url = URL.createObjectURL(blob);
