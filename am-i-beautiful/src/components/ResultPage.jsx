@@ -72,31 +72,60 @@ export default function ResultPage() {
         setPage("camera");
     };
 
-    // Function to highlight exactly 2 key terms
+    // Function to highlight important and meaningful words
     const renderHighlightedText = (text) => {
         if (!text) return null;
 
         const words = text.split(" ");
-        const keyWordsList = ["symmetry", "radiance", "divine", "iconic", "flawless", "aesthetic", "golden", "ratio", "structure", "luminance", "harmony", "celestial", "legendary", "magnetic"];
+        
+        // Key descriptive words that should be highlighted (beauty-related adjectives and nouns)
+        const highPriorityWords = [
+            "radiant", "radiance", "divine", "iconic", "flawless", "ethereal", "luminous", "luminance",
+            "stunning", "magnificent", "breathtaking", "captivating", "mesmerizing", "enchanting",
+            "graceful", "elegant", "exquisite", "gorgeous", "beautiful", "celestial", "angelic",
+            "symmetry", "harmony", "balance", "proportion", "golden", "ratio", "glow", "aura",
+            "charisma", "allure", "charm", "magnetic", "legendary", "mythic", "epic", "rare"
+        ];
+        
+        // Skip common words that shouldn't be highlighted
+        const skipWords = [
+            "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with",
+            "your", "you", "have", "has", "is", "are", "was", "were", "been", "be", "this", "that",
+            "these", "those", "it", "its", "their", "there", "they", "them", "some", "any", "very"
+        ];
 
-        // Find all potential key terms with their indices
-        const potentialTerms = words.map((word, index) => {
-            const cleanWord = word.replace(/[^a-zA-Z0-9]/g, "");
-            const isKeyWord = keyWordsList.includes(cleanWord.toLowerCase());
-            const isLongWord = cleanWord.length > 7;
+        // Score each word
+        const scoredWords = words.map((word, index) => {
+            const cleanWord = word.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+            
+            // Skip if it's a common word
+            if (skipWords.includes(cleanWord) || cleanWord.length < 4) {
+                return { index, word, score: 0 };
+            }
+            
+            // High priority words get top score
+            if (highPriorityWords.includes(cleanWord)) {
+                return { index, word, score: 10 };
+            }
+            
+            // Descriptive adjectives (ending in -ful, -ous, -ic, -al, -ent, -ant)
+            if (/(ful|ous|ic|al|ent|ant)$/.test(cleanWord) && cleanWord.length > 6) {
+                return { index, word, score: 7 };
+            }
+            
+            // Longer meaningful words
+            if (cleanWord.length >= 8) {
+                return { index, word, score: 5 };
+            }
+            
+            return { index, word, score: 0 };
+        });
 
-            return {
-                index,
-                word,
-                cleanWord,
-                score: isKeyWord ? 2 : (isLongWord ? 1 : 0)
-            };
-        }).filter(item => item.score > 0);
-
-        // Sort by score and take top 2
-        const topTerms = potentialTerms
+        // Get top 2-3 words with highest scores
+        const topTerms = scoredWords
+            .filter(item => item.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 2)
+            .slice(0, 3)
             .map(item => item.index);
 
         return words.map((word, index) => {
