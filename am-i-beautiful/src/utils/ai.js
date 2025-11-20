@@ -1,26 +1,31 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useAppStore } from "@/store/appStore";
 
-// Initialize Gemini API
-// Note: In a real production app, you should proxy this request to hide the key.
-// For this demo/hackathon context, we'll use the env var directly.
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-let genAI = null;
-let model = null;
-
-if (API_KEY) {
-    genAI = new GoogleGenerativeAI(API_KEY);
-    model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-        generationConfig: {
-            temperature: 1.8,  // Maximum creativity (range: 0-2)
-            topP: 0.95,
-            topK: 40,
-        }
-    });
-} else {
-    console.warn("VITE_GEMINI_API_KEY is missing. Using fallback compliments.");
-}
+// Initialize Gemini API dynamically with user-provided API key
+const getModel = () => {
+    const apiKey = useAppStore.getState().apiKey || import.meta.env.VITE_GEMINI_API_KEY;
+    
+    if (!apiKey) {
+        console.warn("No API key provided. Using fallback compliments.");
+        return null;
+    }
+    
+    try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            generationConfig: {
+                temperature: 1.8,  // Maximum creativity (range: 0-2)
+                topP: 0.95,
+                topK: 40,
+            }
+        });
+        return model;
+    } catch (error) {
+        console.error("Failed to initialize Gemini API:", error);
+        return null;
+    }
+};
 
 const FALLBACK_COMPLIMENTS = [
     "Analysis complete. Your facial symmetry indicates a rare and captivating harmony.",
@@ -41,6 +46,8 @@ const FALLBACK_COMPLIMENTS = [
 ];
 
 export async function generateDescription(imageSrc, cameraMode = "solo") {
+    const model = getModel();
+    
     if (!model) {
         // Simulate delay for fallback
         return new Promise((resolve) => {
